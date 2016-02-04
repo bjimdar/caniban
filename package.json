@@ -1,0 +1,25 @@
+{
+  "name": "caniban",
+  "version": "1.0.0",
+  "description": "A Kanban board kata",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^1.12.12"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bjimdar/caniban.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bjimdar/caniban/issues"
+  },
+  "homepage": "https://github.com/bjimdar/caniban#readme"
+}

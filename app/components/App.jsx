@@ -1,21 +1,29 @@
-import uuid from 'node-uuid';
 import React from 'react';
-
 import Notes from './Notes.jsx';
-
+import NoteActions from '../actions/NoteActions';
+import NoteStore from '../stores/NoteStore';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = {
-      notes: [
-        { id: uuid.v4(), task: 'Play with WebPack features'},
-        { id: uuid.v4(), task: 'Get React up and running' },
-        { id: uuid.v4(), task: 'Buy a Pumpkin-spiced Latte'} ]
-      
-    };
+    this.state = NoteStore.getState();
   }
+    
+  componentWillMount() {
+    //Unsubscribe from change feed during mounting 
+    // to avoid some known memory leaks problems.
+    NoteStore.unlisten(this.storeChanged);
+  }
+  
+  componentDidMount() {
+    NoteStore.listen(this.storeChanged);
+  }
+  
+  storeChanged = (state) => {
+    //Initialize property so `this` points to the right context
+    this.setState(state);
+  };
   
   render() {
     const notes = this.state.notes;
@@ -29,39 +37,17 @@ export default class App extends React.Component {
     );
   }
   
-  addNote = () => {
-    this.setState({
-      notes: [
-        ...this.state.notes,
-        {
-          id: uuid.v4(), 
-          task: 'New Task placeholder'
-        }
-      ]
-    }, 
-    () => console.log('task added'));
-    
-  };
   
-  editNote = (id, task) => {
+  addNote() { NoteActions.create({task: 'New task'}); }
+  
+  editNote(id, task) {
     //Don't modify if trying to set value to empty
     if (!task.trim()) {
       return;
     }
-    
-    const notes = this.state.notes.map(note => {
-      if (note.id === id && task) {
-        note.task = task;
-      }
-      return note;
-    });
-    this.setState({notes});
+    NoteActions.update({id, task});
   };
   
-  deleteNote = (id) => {
-    this.setState({
-      notes: this.state.notes.filter(note => note.id !== id)
-    });
-  };
+  deleteNote(id) { NoteActions.delete(id) };
   
 }
